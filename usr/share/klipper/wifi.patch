@@ -38,7 +38,8 @@ index 68179bdd..25360e73 100644
         # Restarts
         restart_methods = [None, 'arduino', 'cheetah', 'command', 'rpi_usb']
         self._restart_method = 'command'
-        if self._baud or self._tcp_port:
+-        if self._baud:
++        if self._baud or self._tcp_port:
             rmethods = {m: m for m in restart_methods}
             self._restart_method = config.getchoice('restart_method',
                                                     rmethods, None)
@@ -47,16 +48,6 @@ index 68179bdd..25360e73 100644
         self._emergency_stop_cmd = None
 -       self._is_shutdown = self._is_timeout = True
 +       self._is_shutdown = self._is_timeout = False
-
-@@ -581,7 +586,7 @@ class MCU:
-         # Restarts
-         restart_methods = [None, 'arduino', 'cheetah', 'command', 'rpi_usb']
-         self._restart_method = 'command'
--        if self._baud:
-+        if self._baud or self._tcp_port:
-             rmethods = {m: m for m in restart_methods}
-             self._restart_method = config.getchoice('restart_method',
-                                                     rmethods, None)
 @@ -793,6 +798,8 @@ class MCU:
                      nodeid = cbid.get_nodeid(self._serialport)
                      self._serial.connect_canbus(self._serialport, nodeid,
@@ -71,9 +62,6 @@ index f3c4ed99..6252ba00 100644
 --- a/klippy/serialhdl.py
 +++ b/klippy/serialhdl.py
 @@ -3,7 +3,7 @@
- # Copyright (C) 2016-2021  Kevin O'Connor <kevin@koconnor.net>
- #
- # This file may be distributed under the terms of the GNU GPLv3 license.
 -import logging, threading, os
 +import logging, threading, os, socket
  import serial
